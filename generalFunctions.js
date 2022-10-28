@@ -4,26 +4,18 @@ function getUniqueValues(data,key) {
   return Array.from(new Set(d.map(({ [k]: value }) => value)))
 }
 
-function setToken() {
-  return (folio({
+function getToken(folio,u,p) {
+  return folio({
       method: 'post',
       url: '/bl-users/login',
       data : {
-        "username": c.username,
-        "password": c.password
+        "username": u,
+        "password": p
       }
     })
-    .then(response => {
-      token = response.headers['x-okapi-token']
-      return
-    })
-    .catch(error => {
-      console.log(error);
-    })
-  )
 }
 
 module.exports ={
                   getUniqueValues,
-                  setToken
+                  getToken
                 }

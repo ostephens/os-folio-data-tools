@@ -1,4 +1,4 @@
-function setupInterceptors() {
+function setupInterceptors(axios) {
   axios.interceptors.request.use((config) => {
     return {
       ...config,
@@ -23,6 +23,7 @@ function setupInterceptors() {
 
     return responseWithDelay;
   }, (error) => Promise.reject(error));
+
 }
 
 module.exports ={

@@ -1,11 +1,8 @@
 const axios = require('axios');
-const csv = require('csv-parser');
-const fs = require('fs')
 const config = require('./config')
 const readDataFile = require('./readDataFile.js')
 const citationFunctions = require('./citationFunctions.js')
 const refdataFunctions = require('./refdataFunctions.js')
-const requestFunctions = require('./requestFunctions.js')
 const generalFunctions = require('./generalFunctions.js')
 const interceptors = require('./interceptors.js')
 
@@ -15,12 +12,11 @@ var token = ''
 var tenant = c.tenant
 axios.defaults.timeout = 30000
 axios.defaults.timeoutErrorMessage='timeout'
-interceptors.setupInterceptors()
+interceptors.setupInterceptors(axios)
 const folio = axios.create({
   baseURL: c.okapi,
   timeout: 30000
 })
-
 folio.interceptors.request.use(
   config => {
     config.headers = {
@@ -34,20 +30,31 @@ folio.interceptors.request.use(
 });
 
 main();
+function main1() {
+  readDataFile.readDataFile(file)
+  .then(requests => {
+    works = citationFunctions.getUniqueCitations(requests)
+    console.log(works)
+  })
+  .then( () => {
+    process.exit(1);
+  })
+}
 function main() {
   try {
-    generalFunctions.setToken()
-    .then(() => {
-      readDataFile(file)
+    generalFunctions.getToken(folio,c.username,c.password)
+    .then(response => {
+      token = response.headers['x-okapi-token']
+      readDataFile.readDataFile(file)
       .then(requests => {
         const works = citationFunctions.getUniqueCitations(requests)
           works.forEach((w,k) => {
             worksPrep = []
-            worksPrep.push(citationFunctions.createCitationRequest(w))
+            worksPrep.push(citationFunctions.createCitationRequest(folio,w))
           })
           Promise.all(worksPrep)
           .then((responses) => {
-            refdataFunctions.getRefDataCategories()
+            refdataFunctions.getRefDataCategories(folio)
             .then( response => {
               rdc = response.data
               publisherRefData = rdc.filter(rdc => rdc.desc == "PublicationRequest.Publisher")[0]
@@ -73,24 +80,18 @@ function main() {
               })
               //array of promises to get system ready for requests
               dataPrep = []
-              workIds = []
               if (publishers.length > 0) {
                 const publisherValues = refdataFunctions.refDataValues(publishers)
-                dataPrep.push(refdataFunctions.setupRefData(publisherCategoryUUID,publisherValues))
+                dataPrep.push(refdataFunctions.setupRefData(folio,publisherCategoryUUID,publisherValues))
               }
               if (licenses.length > 0) {
                 const licenseValues = refdataFunctions.refDataValues(licenses)
-                dataPrep.push(refdataFunctions.setupRefData(licenseCategoryUUID,licenseValues))
+                dataPrep.push(refdataFunctions.setupRefData(folio,licenseCategoryUUID,licenseValues))
               }
-              works.forEach((k,w) => {
-                dataPrep.push(citationFunctions.createCitationRequest(w))
-              })
               Promise.all(dataPrep)
               .then ((responses) => {
-                  //need to work out how to assign work IDs to a keyed Array
-                  //with issn as key?
                 console.log("All data prep should be done now")
-                requestFunctions.addRequests(requests)
+                citationFunctions.addRequests(folio,requests)
               })
               .catch(error => {
                 console.log(error);

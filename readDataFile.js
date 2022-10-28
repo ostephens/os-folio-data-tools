@@ -1,3 +1,5 @@
+const fs = require('fs')
+const csv = require('csv-parser');
 function readDataFile(file,requests) {
   return new Promise((resolve,reject) => {
     const requests = []
@@ -34,5 +36,4 @@ function readDataFile(file,requests) {
 
 module.exports ={
                   readDataFile
-                  
                 }

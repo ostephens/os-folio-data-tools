@@ -4,7 +4,7 @@ function refDataValues(list) {
   return values
 }
 
-function setupRefData(categoryUUID,values) {
+function setupRefData(folio,categoryUUID,values) {
   return (folio({
       method: 'put',
       url: '/oa/refdata/'+categoryUUID,
@@ -14,7 +14,7 @@ function setupRefData(categoryUUID,values) {
     }))
 }
 
-function getRefDataCategories() {
+function getRefDataCategories(folio) {
   return folio({
       method: 'get',
       url: '/oa/refdata?max=100'
