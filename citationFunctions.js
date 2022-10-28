@@ -25,20 +25,12 @@ function addRequests(folio,requests) {
             authorNames: r.authorNames,
             publicationUrl: r.url,
             work: {id: workId},
-            publicationType: "journal_article"
+            publicationType: "journal_article",
+            workIndexedInDOAJ: {value: doajStatus(r)},
+            workOAStatus: {value: hybridOrGold(r)}
             //pmid?
-            //need to add hybrid and doaj at this level
-            //if(request["is_hybrid"]==="FALSE") {
-            //   oas = "gold"
-            // } else {
-            //   oas = "hybrid"
-            // }
-            // if(request["doaj"]==="TRUE") {
-            //   doaj = "yes"
-            // } else {
-            //   doaj = "no"
-            // }
           }
+          console.log(request)
           folio({
             method: 'post',
             url: '/oa/publicationRequest',
@@ -59,7 +51,6 @@ function addRequests(folio,requests) {
                 estimatedPrice: {baseCurrency: "EUR", value: r.euro},
                 owner: {id: response.data.id}
               }
-              console.log(charge)
               folio({
                 method: 'post',
                 url: '/oa/charges',
@@ -98,19 +89,9 @@ function createCitation(request) {
     if(!validateISSN(p) && !validateISSN(e)) {
       instances.push({ids:[{ns: "issn", id: i}],subType: "electronic"})
     }
-    if(request["is_hybrid"]==="FALSE") {
-      oas = "gold"
-    } else {
-      oas = "hybrid"
-    }
-    if(request["doaj"]==="TRUE") {
-      doaj = "yes"
-    } else {
-      doaj = "no"
-    }
     let c = {  title: request["journal_full_title"],
-            indexedInDOAJ: doaj,
-            oaStatus: oas,
+            indexedInDOAJ: doajStatus(request),
+            oaStatus: hybridOrGold(request),
             type: "serial",
             instances: instances
           }
@@ -142,6 +123,22 @@ function getUniqueCitations(requests) {
 function validateISSN(issn) {
   const issnRE = /^\d{4}\-\d{3}[0-9X]$/;
   return issnRE.test(issn)
+}
+
+function hybridOrGold(request) {
+  let oas = "hybrid"
+  if(request["is_hybrid"]==="FALSE") {
+    oas = "gold"
+  }
+  return oas
+}
+
+function doajStatus(request) {
+  let doaj = "no"
+  if(request["doaj"]==="TRUE") {
+    doaj = "yes"
+  }
+  return doaj
 }
 
 module.exports ={
