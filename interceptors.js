@@ -1,5 +1,8 @@
 function setupInterceptors(axios) {
   axios.interceptors.request.use((config) => {
+    if (config.delayed) {
+      return new Promise(resolve => setTimeout(() => resolve(config), 600));
+    }
     return {
       ...config,
       p0: performance.now(),

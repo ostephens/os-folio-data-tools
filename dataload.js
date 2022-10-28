@@ -1,3 +1,4 @@
+const https = require('https')
 const axios = require('axios');
 const config = require('./config')
 const readDataFile = require('./readDataFile.js')
@@ -15,7 +16,9 @@ axios.defaults.timeoutErrorMessage='timeout'
 interceptors.setupInterceptors(axios)
 const folio = axios.create({
   baseURL: c.okapi,
-  timeout: 30000
+  delayed: true,
+  timeout: 30000,
+  httpsAgent: new https.Agent({ keepAlive: true, maxSockets: 6 })
 })
 folio.interceptors.request.use(
   config => {
