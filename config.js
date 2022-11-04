@@ -43,9 +43,7 @@ const processArgs = (args) => {
     return config;
   }
 
-  console.log("Usage: node " + __filename + " --username <u> --group <g> --password <p> --tenant <t> --hostname <h> --psets <p>");
-  console.log("Usage: node " + __filename + " --username <u> --group <g> --password <p> --tenant <t> --okapi <o> --psets <p>");
-  console.log("An Okapi URL will parse to values for --hostname and --port.")
+  console.log("Usage: node " + __filename + " --username <u> --group <g> --password <p> --tenant <t> --okapi <o>");
 
   throw `A required argument was not present; missing one of: ${Object.keys(config).join(', ')}.`;
 };
