@@ -1,4 +1,5 @@
 function addRequests(folio,requests) {
+  //Need to have different requests for books and articles
   requests.forEach((r) => {
       i = r["issn"].toUpperCase()
       p = r["issn_print"].toUpperCase()
@@ -102,6 +103,7 @@ function createCitation(request) {
 }
 
 function createCitationRequest(folio,citation) {
+    console.log("Creating " + citation["title"])
     return folio({
       method: 'post',
       url: '/oa/works/citation',
@@ -139,6 +141,12 @@ function doajStatus(request) {
     doaj = "yes"
   }
   return doaj
+}
+
+function publicationBook(request) {
+  i = request["issn"].toUpperCase()
+  p = request["issn_print"].toUpperCase()
+  e = request["issn_electronic"].toUpperCase()
 }
 
 module.exports ={
