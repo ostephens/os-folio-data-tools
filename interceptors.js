@@ -10,7 +10,7 @@ function setupInterceptors(axios) {
   }, (error) => Promise.reject(error));
 
   axios.interceptors.response.use(async (response) => {
-    const minimumDelay = 500;
+    const minimumDelay = 1000;
     const latency = performance.now() - response.config.p0;
     const shouldNotDelay = minimumDelay < latency;
 
