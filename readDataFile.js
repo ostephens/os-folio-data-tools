@@ -4,7 +4,7 @@ function readDataFile(file,requests) {
   return new Promise((resolve,reject) => {
     const requests = []
     fs.createReadStream(file)
-      .pipe(csv())
+      .pipe(csv({ separator: '\t' }))
       .on('data', (data) => requests.push(data))
       .on('end', () => {
         resolve(requests)

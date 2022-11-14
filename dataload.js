@@ -7,7 +7,7 @@ const refdataFunctions = require('./refdataFunctions.js')
 const generalFunctions = require('./generalFunctions.js')
 const interceptors = require('./interceptors.js')
 
-const file = "data.csv"
+const file = "data.tsv"
 const c = config.processArgs(process.argv);
 var token = ''
 var tenant = c.tenant
@@ -100,6 +100,9 @@ function main() {
                 console.log(error);
               })
             })
+          })
+          .catch(error => {
+            console.log(error)
           })
         })
     })
