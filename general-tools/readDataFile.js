@@ -28,7 +28,8 @@ function readDataFile(file,requests) {
         //   pmcid: 'PMC6335711',
         //   ut: 'ut:000455922000001',
         //   url: 'NA',
-        //   doaj: 'TRUE'
+        //   doaj: 'TRUE',
+        // 
         // }
       });
   })

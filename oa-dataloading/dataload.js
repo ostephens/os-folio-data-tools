@@ -1,10 +1,10 @@
 const https = require('https')
 const axios = require('axios');
 const config = require('./config')
-const readDataFile = require('./readDataFile.js')
+const readDataFile = require('../general-tools/readDataFile.js')
 const citationFunctions = require('./citationFunctions.js')
 const refdataFunctions = require('./refdataFunctions.js')
-const generalFunctions = require('./generalFunctions.js')
+const generalFunctions = require('../general-tools/generalFunctions.js')
 const interceptors = require('./interceptors.js')
 
 const file = "data.tsv"
