@@ -33,16 +33,7 @@ folio.interceptors.request.use(
 });
 
 main();
-function main1() {
-  readDataFile.readDataFile(file)
-  .then(requests => {
-    works = citationFunctions.getUniqueCitations(requests)
-    console.log(works)
-  })
-  .then( () => {
-    process.exit(1);
-  })
-}
+
 function main() {
   try {
     generalFunctions.getToken(folio,c.username,c.password)
